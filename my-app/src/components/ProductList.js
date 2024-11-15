@@ -1,34 +1,44 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { CartContext } from '../context/CartContext'; // Importar el contexto
-import mockProducts from './mockData'; // Importa los datos simulados
+import { CartContext } from '../context/CartContext'; // Importar el contexto del carrito
+import axios from 'axios'; // Importar axios para hacer las solicitudes HTTP
 
 const ProductList = () => {
-  const [products, setProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedPriceRange, setSelectedPriceRange] = useState(''); // Estado para el filtro de precios
-  const [sortOrder, setSortOrder] = useState(''); // Estado para el orden de precio
+  const [products, setProducts] = useState([]); // Estado para almacenar los productos de la API
+  const [selectedCategory, setSelectedCategory] = useState(''); // Filtro de categoría
+  const [selectedPriceRange, setSelectedPriceRange] = useState(''); // Filtro de precio
+  const [sortOrder, setSortOrder] = useState(''); // Ordenar por precio
   const { addToCart } = useContext(CartContext); // Obtener la función para agregar al carrito
 
+  // Obtener productos desde la API al montar el componente
   useEffect(() => {
-    setProducts(mockProducts);
+    axios.get('http://localhost:3000/api/productos') // Cambia la URL según tu backend
+      .then(response => {
+        setProducts(response.data); // Almacenar los productos recibidos en el estado
+      })
+      .catch(error => {
+        console.error('Error al obtener productos:', error);
+      });
   }, []);
 
-  // Obtener categorías únicas
+  // Obtener categorías únicas de los productos
   const categories = [...new Set(products.map(product => product.category))];
 
+  // Manejar cambio de categoría seleccionada
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
   };
 
+  // Manejar cambio de rango de precio seleccionado
   const handlePriceChange = (event) => {
     setSelectedPriceRange(event.target.value);
   };
 
+  // Manejar cambio de orden de precios
   const handleSortOrderChange = (event) => {
-    setSortOrder(event.target.value); // Actualizar el estado del orden de precio
+    setSortOrder(event.target.value);
   };
 
-  // Lógica para filtrar los productos por categoría y precio
+  // Filtrar y ordenar los productos
   const filteredProducts = products
     .filter(product => {
       // Filtro por categoría
@@ -44,10 +54,10 @@ const ProductList = () => {
         priceMatch = product.price < 200;
       }
 
-      // Retorna productos que coinciden con ambos filtros
+      // Retornar productos que coinciden con ambos filtros
       return categoryMatch && priceMatch;
     })
-    // Lógica para ordenar los productos por precio
+    // Ordenar los productos por precio
     .sort((a, b) => {
       if (sortOrder === 'asc') {
         return a.price - b.price; // Orden ascendente
@@ -87,13 +97,14 @@ const ProductList = () => {
         <option value="desc">Precio: de mayor a menor</option>
       </select>
 
+      {/* Lista de productos */}
       <ul>
         {filteredProducts.map(product => (
           <li key={product.id}>
             <h2>{product.name}</h2>
             <p>Categoría: {product.category}</p>
             <p>Precio: ${product.price}</p>
-            <button onClick={() => addToCart(product)}>Agregar al Carrito</button> {/* Botón para agregar al carrito */}
+            <button onClick={() => addToCart(product)}>Agregar al Carrito</button>
           </li>
         ))}
       </ul>
