@@ -1,32 +1,52 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
-// Crear el contexto del carrito
+// Creamos el contexto del carrito
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  // Estado del carrito
+  const [cartItems, setCartItems] = useState(() => {
+    // Cargamos los datos del carrito desde localStorage
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  // Efecto para guardar el carrito en localStorage cada vez que cambie
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   // Función para agregar productos al carrito
-  const addToCart = (product) => {
-    setCartItems((prevItems) => {
-      const existingProduct = prevItems.find(item => item.id === product.id);
-
-      if (existingProduct) {
-        // Si el producto ya está en el carrito, incrementa la cantidad
+  const addToCart = (product, quantity = 1) => {
+    setCartItems(prevItems => {
+      const itemExists = prevItems.find(item => item.id === product.id);
+      if (itemExists) {
         return prevItems.map(item =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + quantity }
             : item
         );
-      } else {
-        // Si es un producto nuevo, agregarlo al carrito
-        return [...prevItems, { ...product, quantity: 1 }];
       }
+      return [...prevItems, { ...product, quantity }];
     });
   };
 
+  // Función para eliminar productos del carrito
+  const removeFromCart = (id) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
+  };
+
+  // Función para actualizar la cantidad de productos
+  const updateQuantity = (id, quantity) => {
+    setCartItems(prevItems => 
+      prevItems.map(item => 
+        item.id === id ? { ...item, quantity } : item
+      )
+    );
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity }}>
       {children}
     </CartContext.Provider>
   );
