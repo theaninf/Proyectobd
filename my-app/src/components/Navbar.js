@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // este es el Link para la navegación entre rutas
+import { Link } from 'react-router-dom'; // Link para la navegación entre rutas
 
 const Navbar = () => {
   return (
@@ -10,15 +10,17 @@ const Navbar = () => {
           <Link to="/" style={linkStyle}>Inicio</Link>
         </li>
         <li style={navItemStyle}>
+          <Link to="/products" style={linkStyle}>Catálogo</Link> {/* Enlace al catálogo */}
+        </li>
+        <li style={navItemStyle}>
           <Link to="/cart" style={linkStyle}>Ver Carrito</Link>
         </li>
-        {/* para gregar mas enlaces aqui */}
       </ul>
     </nav>
   );
 };
 
-// Estilos en línea para la barra de navegación, se pueden mejorar con el bootrap o algo asi
+// Estilos en línea para la barra de navegación
 const navStyle = {
   backgroundColor: '#333',
   padding: '10px',

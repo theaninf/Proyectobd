@@ -5,6 +5,7 @@ import ProductDetails from './components/ProductDetails';
 import SearchProducts from './components/SearchProducts';
 import Cart from './components/Cart';
 import Navbar from './components/Navbar';
+import Home from './components/Home'; // Importa la nueva página de inicio
 
 import { CartProvider } from './context/CartContext';
 
@@ -17,7 +18,8 @@ const App = () => {
 
         {/* Definición de las rutas */}
         <Routes>
-          <Route path="/" element={<ProductList />} />
+          <Route path="/" element={<Home />} /> {/* Página de inicio */}
+          <Route path="/products" element={<ProductList />} /> {/* Catálogo de productos */}
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/search" element={<SearchProducts />} />
           <Route path="/cart" element={<Cart />} />
