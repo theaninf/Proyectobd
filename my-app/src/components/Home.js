@@ -1,5 +1,5 @@
 import React from 'react';
-import angapiImage from '../images/angapi.png';
+import burroImage from '../images/burro.jpeg';
 
 const Home = () => {
   return (
@@ -8,7 +8,7 @@ const Home = () => {
       <p>Tu tienda de confianza para todo lo relacionado con la agricultura y jardinería.</p>
 
       {/* Imagen representativa */}
-      <img src={angapiImage} alt="Rincón Campestre" />
+      <img src={burroImage} alt="Rincón Campestre" />
 
       {/* Información adicional */}
       <div className="info">

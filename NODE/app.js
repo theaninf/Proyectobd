@@ -1,7 +1,7 @@
 import express from 'express';
 import connectDB from './database.js';
 import consultasProductos from './Consultas/ConsultasProductos.js';
-
+import cors from 'cors';
 
 const app = express();
 const port = 3000;
@@ -14,8 +14,9 @@ const port = 3000;
     console.error('Error al conectar a la base de datos:', error);
   }
 })();
-
+app.use(cors());
 app.use(express.json());
+
 
 app.get('/productos', consultasProductos.obtenerTodosProductos);
 app.get('/productos/semillas', consultasProductos.obtenerProductosSemillas);

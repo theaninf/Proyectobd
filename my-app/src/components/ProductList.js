@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { CartContext } from '../context/CartContext'; // Importar el contexto del carrito
-import axios from 'axios'; // Importar axios para hacer las solicitudes HTTP
+//import axios from 'axios'; // Importar axios para hacer las solicitudes HTTP
+import mockProducts from './mockData'; // Importa los datos simulados
 
 const ProductList = () => {
   const [products, setProducts] = useState([]); // Estado para almacenar los productos de la API
@@ -10,14 +11,19 @@ const ProductList = () => {
   const { addToCart } = useContext(CartContext); // Obtener la función para agregar al carrito
 
   // Obtener productos desde la API al montar el componente
+  //useEffect(() => {
+  //  axios.get('http://localhost:3000/productos') // Cambia la URL según tu backend
+  //    .then(response => {
+  //      console.log('Datos obtenidos del backend:', response.data);
+  //      setProducts(response.data); // Almacenar los productos recibidos en el estado
+  //    })
+  //    .catch(error => {
+  //      console.error('Error al obtener productos:', error);
+  //    });
+  //}, []);
+
   useEffect(() => {
-    axios.get('http://localhost:3000/api/productos') // Cambia la URL según tu backend
-      .then(response => {
-        setProducts(response.data); // Almacenar los productos recibidos en el estado
-      })
-      .catch(error => {
-        console.error('Error al obtener productos:', error);
-      });
+    setProducts(mockProducts);
   }, []);
 
   // Obtener categorías únicas de los productos
@@ -100,7 +106,7 @@ const ProductList = () => {
       {/* Lista de productos */}
       <ul>
         {filteredProducts.map(product => (
-          <li key={product.id}>
+          <li key={product._id}>
             <h2>{product.name}</h2>
             <p>Categoría: {product.category}</p>
             <p>Precio: ${product.price}</p>
